@@ -1,0 +1,135 @@
+<section class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <div
+      class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+    >
+      <a
+        href="https://flowbite.com/"
+        class="flex items-center space-x-3 rtl:space-x-reverse"
+      >
+        <img
+          src="https://flowbite.com/docs/images/logo.svg"
+          class="h-8"
+          alt="Flowbite Logo"
+        />
+        <span
+          class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+          >Flowbite</span
+        >
+      </a>
+
+      <button
+        class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        (click)="logOut()"
+      >
+        Cerrar sesion
+      </button>
+    </div>
+  </nav>
+
+  <div class="max-w-screen-xl mx-auto">
+    <div>
+      <form class="max-w-sm mx-auto" [formGroup]="form">
+        <div class="mb-5">
+          <label
+            for="large-input"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Titulo</label
+          >
+          <input
+            type="text"
+            id="large-input"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            formControlName="title"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="base-input"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Descripcion</label
+          >
+          <input
+            type="text"
+            id="base-input"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            formControlName="description"
+          />
+        </div>
+        <div>
+          <button
+            class="w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            (click)="newNote()"
+          >
+            {{ !noteSelected ? "Crear Nueva Nota" : "Editar Nota" }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg pt-20">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">ID</th>
+            <th scope="col" class="px-6 py-3">Title</th>
+            <th scope="col" class="px-6 py-3">Description</th>
+            <th scope="col" class="px-6 py-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (notesService.loading()) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td colspan="4" class="px-6 py-4">
+                <p class="text-center">Loading...</p>
+              </td>
+            </tr>
+          }
+
+          @if (!notesService.loading() && !notesService.error()) {
+            @for (note of notesService.notes(); track note) {
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {{ note.id }}
+                </th>
+                <td class="px-6 py-4">{{ note.title }}</td>
+                <td class="px-6 py-4">
+                  {{ note.description ?? "No hay descripcion" }}
+                </td>
+                <td class="flex items-center px-6 py-4">
+                  <a
+                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    (click)="editNote(note)"
+                    >Editar</a
+                  >
+                  <a
+                    class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                    (click)="deleteNote(note)"
+                    >Eliminar</a
+                  >
+                </td>
+              </tr>
+            } @empty {
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                <td class="px-6 py-4 text-center" colspan="4">
+                  No hay notas para este usuario
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
